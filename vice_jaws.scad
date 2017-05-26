@@ -3,9 +3,18 @@
  */
 $fa=2;
 $fs=0.5;
-quadrant=0; /// xy grid quadrant to place the
-           /// main construction geometry in
-           /// 0 = centered
+
+/// grid plane in which to place the main
+/// construction geometry
+/// 0 = xy
+/// 1 = xz
+/// 2 = yz
+global_geometry_plane=0;
+
+/// grid quadrant in which to place the main
+/// construction geometry
+/// 0 = centered
+global_geometry_quadrant=1;
 
 // jaw: basic jaw slab
 jaw_length=80;
@@ -68,24 +77,58 @@ module slot(length) {
 };
 
 // return the position of the slot (bottom of y)
-function slot_position(raio=0.5,offset=0) =
+function slot_position(ratio=0.5,offset=0) =
 	[
 		0,
 		jaw_width*ratio+slot_inner_width+offset,
 		jaw_thickness
 	];
 
+/// rotate the geometry globally
+/// plane - the plane to use as the surface for
+///         the main construction geometry
+///         0 = xy
+///         1 = xz
+///         2 = yz
+module global_rotate(plane=0) {
+	if (plane == 1)
+		rotate([90,0,0]) children();
+	else if (plane == 2)
+		rotate([90,0,90]) children();
+	else
+		children();
+}
+
+/// translate the geometry globally
+/// quadrant - the grid quadrant to use as the
+///         surface for the main construction
+///         geometry
+///         0 = center on origin
+module global_translate(quadrant=1) {
+	if (quadrant == 0)
+		translate([-jaw_length/2,-jaw_width/2,0]) children();
+	else if (quadrant == 2)
+		translate([-jaw_length,0,0]) children();
+	else if (quadrant == 3)
+		translate([-jaw_length,-jaw_width,0]) children();
+	else if (quadrant == 4)
+		translate([0,-jaw_width,0]) children();
+	else
+		children();
+}
 
 /*
  * main construction geometry
  */
-difference() {
-	cube([jaw_length, jaw_width, jaw_thickness]);
-	translate(bolt_center()) {
-		bolt(h=jaw_thickness, r=bolt_radius);
-		translate([bolt_distance,0,0])
-			bolt(h=jaw_thickness, r=bolt_radius);
-	}
-	translate(slot_position(ratio=slot_ratio,offset=slot_y_offset))
-		slot(jaw_length);
-}
+global_rotate(global_geometry_plane)
+	global_translate(global_geometry_quadrant)
+		difference() {
+			cube([jaw_length, jaw_width, jaw_thickness]);
+			translate(bolt_center()) {
+				bolt(h=jaw_thickness, r=bolt_radius);
+				translate([bolt_distance,0,0])
+					bolt(h=jaw_thickness, r=bolt_radius);
+			}
+			translate(slot_position(ratio=slot_ratio,offset=slot_y_offset))
+				slot(jaw_length);
+		}
