@@ -1,5 +1,6 @@
 /*
  * global defines
+ * dimensions represent mm
  */
 $fa=2;
 $fs=0.5;
@@ -17,24 +18,24 @@ global_geometry_plane=0;
 global_geometry_quadrant=1;
 
 // jaw: basic jaw slab
-jaw_length=80;
-jaw_width=20;
-jaw_thickness=5;
+jaw_length=100;
+jaw_width=19;
+jaw_thickness=4;
 
 // bolt: bolt hole carvout
-bolt_radius=4;
-bolt_x_offset=2;  /// x/y offsets account for bolt hole locations
-bolt_y_offset=-2; /// being slightly out in manufacturing
-bolt_sink=2;      // sink the bolt head deeper into the jaw
-bolt_distance=40; // distance between bolt centers
-bolt_chamfer=1.5; // 45° chamfer will be applied
+bolt_radius=3;
+bolt_x_offset=0;    /// x/y offsets account for bolt hole locations
+bolt_y_offset=-1.5; /// being slightly out in manufacturing
+bolt_sink=0.3;      // sink the bolt head deeper into the jaw
+bolt_distance=60;   // distance between bolt centers
+bolt_chamfer=2.5;   // 45° chamfer will be applied
 
 // slot: slot/groove to be made in the jaw
-slot_inner_width=0.8;   // slot width at deepest point
-slot_chamfer_width=1.2; // extra width from chamfer
-slot_depth=2;
+slot_inner_width=0.8;    // slot width at deepest point
+slot_chamfer_width=1.85; // extra width from chamfer
+slot_depth=1.85;
 slot_ratio=1.0;   // location of slot as a proportion of jaw
-slot_y_offset=-6; // offset applied on top of slot_ratio
+slot_y_offset=-4; // offset applied on top of slot_ratio
 
 
 /*
@@ -46,7 +47,7 @@ module bolt(h,r) {
 	translate([0,0,-1]) cylinder(h=h+1,r=r);
 	translate([0,0,h-bolt_chamfer-bolt_sink])
 		cylinder(h=bolt_chamfer,r1=r,r2=r+bolt_chamfer);
-	translate([0,0,h-bolt_sink-.001])
+	translate([0,0,h-bolt_sink-.025])
 		cylinder(h=bolt_sink+1,r=r+bolt_chamfer);
 }
 
