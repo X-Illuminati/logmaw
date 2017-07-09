@@ -121,15 +121,25 @@ module global_translate(quadrant=1) {
 /*
  * main construction geometry
  */
-global_rotate(global_geometry_plane)
-	global_translate(global_geometry_quadrant)
-		difference() {
-			cube([jaw_length, jaw_width, jaw_thickness]);
-			translate(bolt_center()) {
-				bolt(h=jaw_thickness, r=bolt_radius);
-				translate([bolt_distance,0,0])
+module vice_jaw() {
+	global_rotate(global_geometry_plane)
+		global_translate(global_geometry_quadrant)
+			difference() {
+				cube([jaw_length, jaw_width, jaw_thickness]);
+				translate(bolt_center()) {
 					bolt(h=jaw_thickness, r=bolt_radius);
+					translate([bolt_distance,0,0])
+						bolt(h=jaw_thickness, r=bolt_radius);
+				}
+				translate(slot_position(ratio=slot_ratio,offset=slot_y_offset))
+					slot(jaw_length);
 			}
-			translate(slot_position(ratio=slot_ratio,offset=slot_y_offset))
-				slot(jaw_length);
-		}
+}
+
+/*
+ * create example construction
+ * add "generate_example=0;" to any files that include this one
+ */
+generate_example=1;
+if (generate_example)
+	vice_jaw();
