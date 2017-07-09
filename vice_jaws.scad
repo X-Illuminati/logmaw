@@ -1,4 +1,9 @@
 /*
+ * includes
+ */
+use <knurl/knurled_surface.scad>
+
+/*
  * global defines
  * dimensions represent mm
  */
@@ -37,6 +42,13 @@ slot_depth=1.85;
 slot_ratio=1.0;   // location of slot as a proportion of jaw
 slot_y_offset=-4; // offset applied on top of slot_ratio
 
+//knurl: knurl the face of the jaw
+knurl_face=true;   // set to false to disable the knurl
+// knurl up to the bottom of the slot
+knurl_width=jaw_width*slot_ratio+slot_y_offset;
+knurl_thickness=1; // depth of the knurl
+knurl_x_shrink=1;  // amount to shrink the knurl back from the horizontal edge
+knurl_y_shrink=1;  // amount to shrink the knurl back from the vertical edge
 
 /*
  * module and function definitions
@@ -118,14 +130,42 @@ module global_translate(quadrant=1) {
 		children();
 }
 
+// return the position of the knurl region
+function knurl_position() =
+	[
+		knurl_x_shrink,
+		knurl_y_shrink,
+		jaw_thickness-knurl_thickness
+	];
+
+// return the dimensions for the knurl region
+function knurl_dimension() =
+	[
+		jaw_length+knurl_x_shrink*-2,
+		knurl_width+knurl_y_shrink*-2,
+		knurl_thickness
+	];
+
 /*
  * main construction geometry
  */
 module vice_jaw() {
 	global_rotate(global_geometry_plane)
-		global_translate(global_geometry_quadrant)
+		global_translate(global_geometry_quadrant) {
 			difference() {
-				cube([jaw_length, jaw_width, jaw_thickness]);
+				if (knurl_face)
+					union() {
+						difference() {
+							cube([jaw_length, jaw_width, jaw_thickness]);
+							translate(knurl_position())
+									cube(knurl_dimension());
+						}
+						translate(knurl_position())
+							knurled_surface(size=knurl_dimension(),
+								angle=30, thickness=knurl_thickness);
+					}
+				else
+					cube([jaw_length, jaw_width, jaw_thickness]);
 				translate(bolt_center()) {
 					bolt(h=jaw_thickness, r=bolt_radius);
 					translate([bolt_distance,0,0])
@@ -134,12 +174,13 @@ module vice_jaw() {
 				translate(slot_position(ratio=slot_ratio,offset=slot_y_offset))
 					slot(jaw_length);
 			}
+		}
 }
 
 /*
  * create example construction
- * add "generate_example=0;" to any files that include this one
+ * add "generate_example=false;" to any files that include this one
  */
-generate_example=1;
+generate_example=true;
 if (generate_example)
 	vice_jaw();

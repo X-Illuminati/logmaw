@@ -6,7 +6,7 @@ include <vice_jaws.scad>
 /*
  * custom settings for vice_jaws.scad
  */
-generate_example=0;
+generate_example=false;
 bolt_x_offset=-1;   /// x/y offsets account for bolt hole locations
 
 /*
