@@ -28,12 +28,12 @@ jaw_width=19;
 jaw_thickness=4;
 
 // bolt: bolt hole carvout
-bolt_radius=3;
+bolt_radius=3.5;
 bolt_x_offset=0;    /// x/y offsets account for bolt hole locations
 bolt_y_offset=-1.5; /// being slightly out in manufacturing
-bolt_sink=0.3;      // sink the bolt head deeper into the jaw
+bolt_sink=1;        // sink the bolt head deeper into the jaw
 bolt_distance=60;   // distance between bolt centers
-bolt_chamfer=2.5;   // 45° chamfer will be applied
+bolt_chamfer=2;     // 45° chamfer will be applied
 
 // slot: slot/groove to be made in the jaw
 slot_inner_width=0.8;    // slot width at deepest point
