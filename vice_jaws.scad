@@ -49,6 +49,7 @@ knurl_width=jaw_width*slot_ratio+slot_y_offset;
 knurl_thickness=1; // depth of the knurl
 knurl_x_shrink=1;  // amount to shrink the knurl back from the horizontal edge
 knurl_y_shrink=1;  // amount to shrink the knurl back from the vertical edge
+knurl_scale=2.5;   // amount to scale the knurling
 
 /*
  * module and function definitions
@@ -162,7 +163,9 @@ module vice_jaw() {
 						}
 						translate(knurl_position())
 							knurled_surface(size=knurl_dimension(),
-								angle=30, thickness=knurl_thickness);
+								scale=knurl_scale,
+								angle=30,
+								thickness=knurl_thickness);
 					}
 				else
 					cube([jaw_length, jaw_width, jaw_thickness]);
