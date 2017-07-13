@@ -54,14 +54,15 @@ module knurl(size=[10,10,1], angle=30)
 // "knurler" from a cube
 // the thickness of the cube is controlled by the thickness
 // parameter rather than by size.z
-module knurled_surface(size=[10,10,1], angle=30, thickness=2)
+module knurled_surface(size=[10,10,1], angle=30, thickness=2, scale=1)
 {
-	difference() {
-		cube([size.x,size.y,thickness]);
-		translate([0,0,thickness-size.z])
-			knurl(size, angle);
-	}
+	scale([scale,scale,1])
+		difference() {
+			cube([size.x/scale,size.y/scale,thickness]);
+			translate([0,0,thickness-size.z])
+				knurl([size.x/scale,size.y/scale,size.z], angle);
+		}
 }
 
 // example knurled surface
-knurled_surface(size=[35,35,1], angle=30, thickness=1.5);
+knurled_surface(size=[35,35,1], angle=30, thickness=1.5, scale=2);
