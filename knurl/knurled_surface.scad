@@ -16,16 +16,17 @@ module knurl(size=[10,10,1], angle=30)
 //	length=max(size.x,size.y)*sqrt(2);
 	width=size.z*2;
 	count=max(size.x, size.y)/width;
-	angle=angle;
+	angle=angle/2;
 
 	module yhash()
 	{
-		disp=width;
-		count=(size.y)/width;
+		disp=width/cos(angle);
+		dy=size.x*tan(angle);
+		count=(size.y+dy)/width;
 		for (yy=[0:1:count])
-			translate([-width/2,yy*disp,0])
-				rotate([45,0,0])
-					cube([(size.x+width),
+			translate([-width/2,yy*disp-dy,0])
+				rotate([45,0,angle])
+					cube([(size.x+width)/cos(angle),
 					      width/sqrt(2),
 					      width/sqrt(2)]);
 	}
@@ -34,19 +35,13 @@ module knurl(size=[10,10,1], angle=30)
 	{
 		disp=width/cos(angle);
 		dx=size.y*tan(angle);
-		count=size.x/width+1;
-		precount=dx/width+1;
-		module xhash_single(i)
-			translate([i*disp,0,0])
-				rotate([45,0,90-angle])
-					translate([-width/2,0,0])
-						cube([(size.y+width)/cos(angle),
-							  width/sqrt(2),
-							  width/sqrt(2)]);
+		count=(size.x+dx)/width;
 		for (xx=[0:1:count])
-			xhash_single(xx);
-		for (xx=[1:1:precount])
-			xhash_single(-xx);
+			translate([xx*disp-dx,-width/2,0])
+				rotate([45,0,90-angle])
+					cube([(size.y+width)/cos(angle),
+					      width/sqrt(2),
+					      width/sqrt(2)]);
 	}
 
 	union() {
