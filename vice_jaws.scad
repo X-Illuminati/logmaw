@@ -47,9 +47,14 @@ knurl_face=true;   // set to false to disable the knurl
 // knurl up to the bottom of the slot
 knurl_width=jaw_width*slot_ratio+slot_y_offset;
 knurl_thickness=1; // depth of the knurl
-knurl_x_shrink=1;  // amount to shrink the knurl back from the horizontal edge
+knurl_angle=30;
 knurl_y_shrink=1;  // amount to shrink the knurl back from the vertical edge
+knurl_x_shrink=1;  // amount to shrink the knurl back from the horizontal edge
 knurl_scale=2.5;   // amount to scale the knurling
+// a more pleasing knurl can result by tweaking
+// the above 2 params
+knurl_scale=(knurl_width+knurl_y_shrink*-2)*cos(knurl_angle)/(10*sin(45-knurl_angle/2));
+knurl_x_shrink=50-11*(knurl_width+knurl_y_shrink*-2)/(5*tan(45-knurl_angle/2));
 
 /*
  * module and function definitions
@@ -164,7 +169,7 @@ module vice_jaw() {
 						translate(knurl_position())
 							knurled_surface(size=knurl_dimension(),
 								scale=knurl_scale,
-								angle=30,
+								angle=knurl_angle,
 								thickness=knurl_thickness);
 					}
 				else
