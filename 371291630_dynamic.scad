@@ -9,7 +9,7 @@ include <vice_jaws.scad>
 generate_example=false;
 bolt_x_offset=0.2;
 bolt_y_offset=-0.9;
-bolt_distance=59.5;
+bolt_distance=60;
 
 /*
  * global defines

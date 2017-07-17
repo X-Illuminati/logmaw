@@ -8,7 +8,7 @@ include <vice_jaws.scad>
  */
 generate_example=false;
 bolt_x_offset=-0.85;
-bolt_y_offset=-1.15;
+bolt_y_offset=-1.35;
 bolt_distance=60.25;
 
 /*
