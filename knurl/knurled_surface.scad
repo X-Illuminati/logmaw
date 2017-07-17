@@ -14,41 +14,28 @@
 module knurl(size=[10,10,1], angle=30)
 {
 	width=size.z*2;
-	angle=angle/2;
+	angle=(90-angle)/2;
 
-	module yhash()
+	module hash(mirror=false)
 	{
 		disp=width/cos(angle);
 		dy=size.x*tan(angle);
-		count=floor(size.y/width)+1;
-		precount=floor(dy/width)+1;
-		for (yy=[-precount:1:count])
+		cstart=mirror?floor(-dy/width-.5)-1:0;
+		count=floor((size.y+dy)/width+.5)+1;
+		cend=mirror?(count+cstart+1):count;
+		for (yy=[cstart:1:cend])
 			translate([0,yy*disp,0])
-				rotate([45,0,angle])
+				mirror([0,mirror?1:0,0])
+				rotate([45,0,-angle])
 					translate([-width/2,0,0])
 						cube([(size.x+width)/cos(angle),
 							width/sqrt(2),
 							width/sqrt(2)]);
 	}
 
-	module xhash()
-	{
-		disp=width/cos(angle);
-		dx=size.y*tan(angle);
-		count=floor(size.x/width)+1;
-		precount=floor(dx/width)+1;
-		for (xx=[-precount:1:count])
-			translate([xx*disp,0,0])
-				rotate([45,0,90-angle])
-					translate([-width/2,0,0])
-						cube([(size.y+width)/cos(angle),
-							width/sqrt(2),
-							width/sqrt(2)]);
-	}
-
 	union() {
-		yhash();
-		xhash();
+		hash();
+		hash(mirror=true);
 	}
 }
 
@@ -67,4 +54,4 @@ module knurled_surface(size=[10,10,1], angle=30, thickness=2, scale=1)
 }
 
 // example knurled surface
-knurled_surface(size=[35,35,1], angle=30, thickness=1.5, scale=2);
+knurled_surface(size=[35,15,1], angle=35, thickness=1.5, scale=2);
